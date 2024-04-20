@@ -1,0 +1,51 @@
+node_modules
+# Node modules and TypeScript compiled files
+node_modules/
+dist/
+out/
+
+# Configuration files
+config.json
+config.dev.json
+config.production.json
+config.test.json
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.vscode/
+*.sublime-workspace
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# SQLite database file
+*.db
+*.sqlite
+economy.db
+
+# Performance and diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# TypeScript tsbuildinfo file for faster compiles
+*.tsbuildinfo
+
+# Yarn Integrity file
+.yarn-integrity
