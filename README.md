@@ -1,4 +1,4 @@
-# TypeScript Complete Sapphire Bot example
+# Bee Booot
 
 This is a more complete setup of a Discord bot using the [sapphire framework][sapphire] written in TypeScript.
 
