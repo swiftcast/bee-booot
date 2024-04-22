@@ -4,16 +4,16 @@ import { ChannelType, ChatInputCommandInteraction, PermissionsBitField } from 'd
 import * as fs from 'fs';
 import * as path from 'path';
 
-
 @ApplyOptions<Command.Options>({
     name: 'set-image-channel',
-    description: 'Sets a channel where only images are allowed',
+    description: 'Sets channels where only images are allowed',
     requiredUserPermissions: [PermissionsBitField.Flags.ManageGuild],
     preconditions: ['GuildOnly']
 })
 export class UserCommand extends Command {
 
     private configPath = path.join(process.cwd(), 'config.json');
+    
     public override registerApplicationCommands(registry: Command.Registry): void {
         registry.registerChatInputCommand((builder) =>
             builder
@@ -35,11 +35,29 @@ export class UserCommand extends Command {
             return interaction.reply({ content: 'Please select a valid text channel.', ephemeral: true });
         }
 
-        const config = { imageOnlyChannelId: channelOption.id };
-        fs.writeFileSync(this.configPath, JSON.stringify(config));
+        // Read existing config or create a new one if it doesn't exist
+        let config;
+        try {
+            config = JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
+        } catch (error) {
+            config = { imageOnlyChannelIds: [] };
+        }
+
+        // Add the new channel ID to the array if it's not already included
+        if (!config.imageOnlyChannelIds.includes(channelOption.id)) {
+            config.imageOnlyChannelIds.push(channelOption.id);
+        } else {
+            return interaction.reply({
+                content: `Channel <#${channelOption.id}> is already set as an image-only channel.`,
+                ephemeral: true
+            });
+        }
+
+        // Save the updated config
+        fs.writeFileSync(this.configPath, JSON.stringify(config, null, 4));
         
         return interaction.reply({
-            content: `Set <#${channelOption.id}> as the image-only channel.`,
+            content: `Added <#${channelOption.id}> to image-only channels.`,
             ephemeral: true
         });
     }
