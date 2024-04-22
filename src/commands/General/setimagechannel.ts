@@ -19,6 +19,8 @@ export class UserCommand extends Command {
             builder
                 .setName('toggle-image-channel')
                 .setDescription(this.description)
+                .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels)  // Set default permissions required to see and use the command
+                .setDMPermission(false)  // Disallow use in DMs
                 .addChannelOption(option =>
                     option.setName('channel')
                         .setDescription('The channel to toggle as image-only')
