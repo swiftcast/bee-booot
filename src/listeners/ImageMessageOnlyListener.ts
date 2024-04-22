@@ -47,7 +47,7 @@ export class UserListener extends Listener {
         if (!hasImage) {
             try {
                 await message.delete();
-                const warningMessage = await message.channel.send("Only images are allowed in this channel so everyone's pictures have time to be pollinated by the hive! Please create a thread if you want to discuss them or continue in a different channel. Thank you for your understanding. 🐝");
+                const warningMessage = await message.channel.send("In this channel, let your images float like pollen, allowing the hive to tenderly pollinate each visual blossom with attention and admiration. 🐝 Please weave any discussions into a separate thread or continue in another channel, ensuring our garden thrives in harmony and beauty. Thank you for your sweetness and understanding. 🌼");
                 setTimeout(() => warningMessage.delete().catch(err => this.container.logger.error(`Failed to delete the warning message: ${err}`)), 30000);
                 this.container.logger.info(`Deleted a text-only message from ${message.author.tag}`);
             } catch (error) {
