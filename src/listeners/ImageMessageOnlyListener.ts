@@ -10,14 +10,33 @@ import * as path from 'path';
 })
 export class UserListener extends Listener {
     private configPath = path.join(process.cwd(), 'config.json');
-    private targetChannelIds: string[] = this.loadConfig();
+    private targetChannelIds: string[] = [];
 
-    private loadConfig(): string[] {
+    constructor(context: Listener.Context, options?: Partial<ListenerOptions>) {
+        super(context, {
+            ...options,
+            event: Events.MessageCreate
+        });
+        this.loadConfig();
+        this.watchConfig();
+    }
+
+    private loadConfig(): void {
         if (fs.existsSync(this.configPath)) {
             const config = JSON.parse(fs.readFileSync(this.configPath, 'utf-8'));
-            return config.imageOnlyChannelIds || [];
+            this.targetChannelIds = config.imageOnlyChannelIds || [];
+        } else {
+            this.targetChannelIds = [];
         }
-        return [];
+    }
+
+    private watchConfig(): void {
+        fs.watch(this.configPath, (eventType, filename) => {
+            if (filename && eventType === 'change') {
+                this.container.logger.info(`Config file ${filename} has been changed, reloading config.`);
+                this.loadConfig();
+            }
+        });
     }
 
     public async run(message: Message) {
