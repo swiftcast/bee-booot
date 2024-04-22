@@ -5,8 +5,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 @ApplyOptions<Command.Options>({
-    name: 'set-image-channel',
-    description: 'Sets channels where only images are allowed',
+    name: 'toggle-image-channel',
+    description: 'Toggles a channel as image-only on or off',
     requiredUserPermissions: [PermissionsBitField.Flags.ManageGuild],
     preconditions: ['GuildOnly']
 })
@@ -17,11 +17,11 @@ export class UserCommand extends Command {
     public override registerApplicationCommands(registry: Command.Registry): void {
         registry.registerChatInputCommand((builder) =>
             builder
-                .setName('set-image-channel')
+                .setName('toggle-image-channel')
                 .setDescription(this.description)
                 .addChannelOption(option =>
                     option.setName('channel')
-                        .setDescription('The channel to set as image-only')
+                        .setDescription('The channel to toggle as image-only')
                         .setRequired(true)
                         .addChannelTypes(ChannelType.GuildText) // Limit to text channels only
                 )
@@ -39,25 +39,30 @@ export class UserCommand extends Command {
         let config;
         try {
             config = JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
+            if (!config.imageOnlyChannelIds) {
+                config.imageOnlyChannelIds = [];
+            }
         } catch (error) {
             config = { imageOnlyChannelIds: [] };
         }
 
-        // Add the new channel ID to the array if it's not already included
-        if (!config.imageOnlyChannelIds.includes(channelOption.id)) {
+        const index = config.imageOnlyChannelIds.indexOf(channelOption.id);
+
+        let replyMessage;
+        // Toggle the channel ID in the array
+        if (index === -1) {
             config.imageOnlyChannelIds.push(channelOption.id);
+            replyMessage = `Added <#${channelOption.id}> to image-only channels.`;
         } else {
-            return interaction.reply({
-                content: `Channel <#${channelOption.id}> is already set as an image-only channel.`,
-                ephemeral: true
-            });
+            config.imageOnlyChannelIds.splice(index, 1);
+            replyMessage = `Removed <#${channelOption.id}> from image-only channels.`;
         }
 
         // Save the updated config
         fs.writeFileSync(this.configPath, JSON.stringify(config, null, 4));
         
         return interaction.reply({
-            content: `Added <#${channelOption.id}> to image-only channels.`,
+            content: replyMessage,
             ephemeral: true
         });
     }
