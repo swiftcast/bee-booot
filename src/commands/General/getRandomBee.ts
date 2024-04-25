@@ -1,6 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command, CommandOptionsRunTypeEnum } from '@sapphire/framework';
-import { CommandInteraction } from 'discord.js';
+import { CommandInteraction, EmbedBuilder } from 'discord.js';
 
 interface Observation {
     id: number;
@@ -52,18 +52,25 @@ export class RandomBeeObservationCommand extends Command {
             if (observations.length > 0) {
                 const randomObservation = observations[Math.floor(Math.random() * observations.length)];
 
-                // Format the reply
-                let replyMessage = `**Random Bee Observation Details:**\n`;
-                replyMessage += `**Species Guess:** ${randomObservation.species_guess}\n`;
-                replyMessage += `**Location:** ${randomObservation.location}\n`;
-                replyMessage += `**Observed On:** ${randomObservation.observed_on}\n`;
+                // Create an embed message
+                const embed = new EmbedBuilder()
+                    .setTitle('Random Bee Observation')
+                    .setColor(0xF1C40F) // Gold color
+                    .addFields(
+                        { name: 'Species Guess', value: randomObservation.species_guess, inline: true },
+                        { name: 'Location', value: randomObservation.location || 'Unknown', inline: true },
+                        { name: 'Observed On', value: randomObservation.observed_on, inline: true }
+                    );
+
+
+                // Add photo if available
                 if (randomObservation.photos.length > 0) {
-                    replyMessage += `**Photo URL:** ${randomObservation.photos[0].url}`;
-                } else {
-                    replyMessage += 'No photo available.';
+                    embed.setImage(randomObservation.photos[1].url);
+                    embed.setURL(randomObservation.photos[0].url);
                 }
 
-                await interaction.editReply(replyMessage);
+                // Send the embed message
+                await interaction.editReply({ embeds: [embed] });
             } else {
                 await interaction.editReply('No observations found.');
             }
