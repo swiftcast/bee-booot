@@ -1,10 +1,19 @@
 // src/listeners/lodestoneUpdate.ts
 import { Listener } from '@sapphire/framework';
 import { fetchLodestoneData } from '../utils/lodestone';
-import { TextChannel, EmbedBuilder } from 'discord.js';
+import { TextChannel, EmbedBuilder, ColorResolvable } from 'discord.js';
 
 const CHECK_INTERVAL = 60000; // Check every 60 seconds
 let lastUpdate: number = 0;
+
+const colorMapping: { [key: string]: ColorResolvable } = {
+    topics: '#FFD700', // Gold for Topics
+    notices: '#FF4500', // OrangeRed for Notices
+    maintenance: '#1E90FF', // DodgerBlue for Maintenance
+    updates: '#32CD32', // LimeGreen for Updates
+    status: '#FF69B4', // HotPink for Status
+    developers: '#8A2BE2', // BlueViolet for Developers
+};
 
 export class LodestoneUpdateListener extends Listener {
     public constructor(context: Listener.Context, options: Listener.Options) {
@@ -21,12 +30,12 @@ export class LodestoneUpdateListener extends Listener {
                 const data = await fetchLodestoneData();
 
                 const allUpdates = [
-                    ...data.topics,
-                    ...data.notices,
-                    ...data.maintenance,
-                    ...data.updates,
-                    ...data.status,
-                    ...data.developers
+                    ...data.topics.map((update: any) => ({ ...update, source: 'topics' })),
+                    ...data.notices.map((update: any) => ({ ...update, source: 'notices' })),
+                    ...data.maintenance.map((update: any) => ({ ...update, source: 'maintenance' })),
+                    ...data.updates.map((update: any) => ({ ...update, source: 'updates' })),
+                    ...data.status.map((update: any) => ({ ...update, source: 'status' })),
+                    ...data.developers.map((update: any) => ({ ...update, source: 'developers' }))
                 ];
 
                 const newUpdates = allUpdates.filter((update: any) => new Date(update.time).getTime() > lastUpdate);
@@ -47,8 +56,9 @@ export class LodestoneUpdateListener extends Listener {
                                 embed.setImage(update.image);
                             }
 
-                            // Optional: set a color for the embed
-                            embed.setColor('#FFD700');
+                            // Set the color based on the source
+                            const embedColor: ColorResolvable = colorMapping[update.source] || '#FFFFFF';
+                            embed.setColor(embedColor);
 
                             channel.send({ embeds: [embed] });
                         });
