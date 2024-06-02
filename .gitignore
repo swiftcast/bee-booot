@@ -49,3 +49,6 @@ pids
 
 # Yarn Integrity file
 .yarn-integrity
+
+# Data files
+data/*.json
