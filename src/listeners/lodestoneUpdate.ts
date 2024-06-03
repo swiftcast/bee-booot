@@ -79,7 +79,13 @@ export class LodestoneUpdateListener extends Listener {
                     lastUpdate = new Date(newUpdates[0].time).getTime();
                     await writeLastUpdateTime(lastUpdate);
 
-                    const channel = this.container.client.channels.cache.get('1246325766464077834') as TextChannel;
+                    const channelId = process.env.FF14_CHANNEL_ID;
+                    if (!channelId) {
+                        console.error('Channel ID is not set in environment variables.');
+                        return;
+                    }
+
+                    const channel = this.container.client.channels.cache.get(channelId) as TextChannel;
                     if (channel) {
                         newUpdates.forEach((update: any) => {
                             const embed = new EmbedBuilder()
