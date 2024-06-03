@@ -3,7 +3,7 @@ import { fetchLodestoneData } from '../utils/lodestone';
 import { TextChannel, EmbedBuilder, ColorResolvable } from 'discord.js';
 import { readLastUpdateTime, writeLastUpdateTime } from '../utils/storage';
 
-const CHECK_INTERVAL = 60000; // Check every 60 seconds
+const CHECK_INTERVAL = 600000; // Check every 60 seconds
 
 const colorMapping: { [key: string]: ColorResolvable } = {
     topics: '#FFD700', // Gold for Topics
