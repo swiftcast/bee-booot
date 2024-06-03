@@ -3,15 +3,15 @@ import { fetchLodestoneData } from '../utils/lodestone';
 import { TextChannel, EmbedBuilder, ColorResolvable } from 'discord.js';
 import { readLastUpdateTime, writeLastUpdateTime } from '../utils/storage';
 
-const CHECK_INTERVAL = 600000; // Check every 60 seconds
+const CHECK_INTERVAL = 600000; // Check every 600 seconds
 
 const colorMapping: { [key: string]: ColorResolvable } = {
-    topics: '#FFD700', // Gold for Topics
-    notices: '#FF4500', // OrangeRed for Notices
-    maintenance: '#1E90FF', // DodgerBlue for Maintenance
-    updates: '#32CD32', // LimeGreen for Updates
-    status: '#FF69B4', // HotPink for Status
-    developers: '#8A2BE2', // BlueViolet for Developers
+    topics: '#D98B13', // Gold for Topics
+    notices: '#404040', // OrangeRed for Notices
+    maintenance: '#CCAB29', // DodgerBlue for Maintenance
+    updates: '#6B8E23', // LimeGreen for Updates
+    status: '#992255', // HotPink for Status
+    developers: '#669999', // BlueViolet for Developers
 };
 
 const sourceInfo: { [key: string]: { iconURL: string, name: string, url: string } } = {
