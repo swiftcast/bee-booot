@@ -53,6 +53,19 @@ export class UserListener extends Listener {
             } catch (error) {
                 this.container.logger.error(`Failed to delete message: ${error}`);
             }
+        } else {
+            // Create a thread for the message
+            const threadTitle = message.content.trim() !== '' ? message.content : 'Untitled Thread';
+            try {
+                const thread = await message.startThread({
+                    name: threadTitle,
+                    autoArchiveDuration: 60, // Archive after 1 hour of inactivity
+                    reason: 'Image message thread'
+                });
+                this.container.logger.info(`Created a thread for the image message: ${thread.id}`);
+            } catch (error) {
+                this.container.logger.error(`Failed to create thread: ${error}`);
+            }
         }
     }
 
