@@ -61,7 +61,7 @@ export class UserListener extends Listener {
             try {
                 const thread = await message.startThread({
                     name: threadTitle,
-                    autoArchiveDuration: 60, // Archive after 1 hour of inactivity
+                    autoArchiveDuration: 60 * 24, // Archive after 24 hour of inactivity
                     reason: 'Image message thread'
                 });
                 this.container.logger.info(`Created a thread for the image message: ${thread.id}`);
