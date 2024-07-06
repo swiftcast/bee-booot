@@ -55,7 +55,7 @@ export class UserListener extends Listener {
             }
         } else {
             // Use nickname if available, otherwise use username
-            const displayName = message.member?.nickname || message.author.username;
+            const displayName = message.member?.nickname || message.author.displayName;
             const currentDate = new Date().toLocaleDateString();
             const threadTitle = message.content.trim() !== '' ? message.content : `Images by ${displayName} on ${currentDate}`;
             try {
