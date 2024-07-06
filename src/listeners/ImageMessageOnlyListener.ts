@@ -54,8 +54,10 @@ export class UserListener extends Listener {
                 this.container.logger.error(`Failed to delete message: ${error}`);
             }
         } else {
-            // Create a thread for the message
-            const threadTitle = message.content.trim() !== '' ? message.content : 'Untitled Thread';
+            // Use nickname if available, otherwise use username
+            const displayName = message.member?.nickname || message.author.username;
+            const currentDate = new Date().toLocaleDateString();
+            const threadTitle = message.content.trim() !== '' ? message.content : `Images by ${displayName} on ${currentDate}`;
             try {
                 const thread = await message.startThread({
                     name: threadTitle,
