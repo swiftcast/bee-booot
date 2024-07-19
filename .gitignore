@@ -10,6 +10,7 @@ config.dev.json
 config.production.json
 config.test.json
 jest.config.json
+jest.config.js
 
 # Environment files
 .env
