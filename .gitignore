@@ -9,6 +9,7 @@ config.json
 config.dev.json
 config.production.json
 config.test.json
+jest.config.json
 
 # Environment files
 .env
