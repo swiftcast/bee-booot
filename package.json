@@ -45,7 +45,8 @@
 		"start": "node dist/index.js",
 		"dev": "run-s build start",
 		"watch:start": "tsc-watch --onSuccess \"node ./dist/index.js\"",
-		"format": "prettier --write \"src/**/*.ts\""
+		"format": "prettier --write \"src/**/*.ts\"",
+		"test": "jest"
 	},
 	"prettier": "@sapphire/prettier-config"
 }
