@@ -29,21 +29,19 @@ describe('MediaMessageOnlyListener', () => {
     } as unknown as Attachment);
 
   beforeEach(() => {
-    listener = new MediaMessageOnlyListener({} as Listener.Context, {});
-    mockMessage = {
-      author: {
+        listener = new MediaMessageOnlyListener({} as any, { event: Events.MessageCreate });
+
+        const mockUser: Partial<User> = {
         bot: false,
-        tag: 'testUser#1234'
-      } as any,
-      attachments: new Collection<Snowflake, any>(),
-      content: '',
-      createdTimestamp: Date.now(),
-      id: '123456789',
-      channel: {} as any,
-      guild: {} as any,
-      valueOf: () => 'mockMessage'
-    };
-  });
+            id: '123',
+            username: 'testUser',
+            toString() {
+                return `<@${this.id}>`;
+            },
+            valueOf() {
+                return this.id;
+            }
+        };
 
   test('should ignore bot messages', async () => {
     mockMessage.author!.bot = true;  // Use non-null assertion
