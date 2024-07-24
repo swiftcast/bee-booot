@@ -1,10 +1,32 @@
+import { Events } from '@sapphire/framework';
+import { Message, ThreadChannel, TextChannel, User, Attachment, Collection } from 'discord.js';
 import { MediaMessageOnlyListener } from '../src/listeners/MediaMessageOnlyListener';
-import { Listener } from '@sapphire/framework';
-import { Message, AttachmentBuilder, Collection, Snowflake } from 'discord.js';
+import { jest } from '@jest/globals';
+
+const mockFs = {
+  watch: jest.fn(),
+  existsSync: jest.fn().mockReturnValue(true),
+  readFileSync: jest.fn().mockReturnValue(JSON.stringify({ imageOnlyChannelIds: ['123'] })),
+};
+
+jest.mock('fs', () => mockFs);
 
 describe('MediaMessageOnlyListener', () => {
   let listener: MediaMessageOnlyListener;
-  let mockMessage: Partial<Message<boolean>>;
+    let mockMessage: Partial<Message>;
+    let mockChannel: Partial<TextChannel>;
+    let mockUser: Partial<User>;
+
+    const createMockAttachment = (url: string, contentType: string): Attachment => ({
+        url,
+        contentType,
+        name: 'mockAttachment',
+        size: 1024,
+        id: 'attachment123',
+        proxyURL: url,
+        height: 100,
+        width: 100,
+    } as unknown as Attachment);
 
   beforeEach(() => {
     listener = new MediaMessageOnlyListener({} as Listener.Context, {});
