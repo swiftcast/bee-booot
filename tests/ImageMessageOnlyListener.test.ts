@@ -1,4 +1,4 @@
-import { Events } from '@sapphire/framework';
+import { Events, Container } from '@sapphire/framework';
 import { Message, TextChannel, User, Attachment, Collection } from 'discord.js';
 import { MediaMessageOnlyListener } from '../src/listeners/MediaMessageOnlyListener';
 import { jest } from '@jest/globals';
@@ -14,6 +14,7 @@ describe('MediaMessageOnlyListener', () => {
     let listener: MediaMessageOnlyListener;
     let mockMessage: Partial<Message>;
     let mockChannel: Partial<TextChannel>;
+    let mockContainer: Partial<Container>;
     //let mockUser: Partial<User>;
 
     const createMockAttachment = (url: string, contentType: string): Attachment => ({
@@ -28,7 +29,24 @@ describe('MediaMessageOnlyListener', () => {
     } as unknown as Attachment);
 
     beforeEach(() => {
-        listener = new MediaMessageOnlyListener({} as any, { event: Events.MessageCreate });
+        // Mock the container and logger
+        mockContainer = {
+            logger: {
+                has: jest.fn(() => true),
+                trace: jest.fn(),
+                debug: jest.fn(),
+                info: jest.fn(),
+                warn: jest.fn(),
+                error: jest.fn(),
+                fatal: jest.fn(),
+                write: jest.fn(),
+            },
+        };
+        listener = new MediaMessageOnlyListener(
+            { container: mockContainer } as any,
+            { event: Events.MessageCreate }
+        );
+
 
         const mockUser: Partial<User> = {
             bot: false,
