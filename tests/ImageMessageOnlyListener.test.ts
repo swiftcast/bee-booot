@@ -3,13 +3,12 @@ import { Message, TextChannel, User, Attachment, Collection } from 'discord.js';
 import { MediaMessageOnlyListener } from '../src/listeners/MediaMessageOnlyListener';
 import { jest } from '@jest/globals';
 
-const mockFs = {
-  watch: jest.fn(),
-  existsSync: jest.fn().mockReturnValue(true),
-  readFileSync: jest.fn().mockReturnValue(JSON.stringify({ imageOnlyChannelIds: ['123'] })),
-};
-
-jest.mock('fs', () => mockFs);
+// Mock the fs module
+jest.mock('fs', () => ({
+    watch: jest.fn(),
+    existsSync: jest.fn().mockReturnValue(true),
+    readFileSync: jest.fn().mockReturnValue(JSON.stringify({ imageOnlyChannelIds: ['123'] })),
+  }));
 
 describe('MediaMessageOnlyListener', () => {
     let listener: MediaMessageOnlyListener;
